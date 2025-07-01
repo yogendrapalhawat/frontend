@@ -2,8 +2,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://one-portal-backend.onrender.com/api', 
+  baseURL: 'https://one-portal-backend.onrender.com/api',  // ✅ Your correct backend URL
 });
+
 
 export const getAllEvents = async () => {
   const token = localStorage.getItem('token');
