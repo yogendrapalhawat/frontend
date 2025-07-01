@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Navbar.css'; // ✅ External CSS file (create this)
+import './Navbar.css'; // 💅 Stylish CSS
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -12,9 +12,8 @@ const Navbar = () => {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       isAdmin = payload?.isAdmin;
-      console.log("JWT Payload ➜", payload); // For debug
     } catch (err) {
-      console.error("❌ Token decode error:", err);
+      console.error("Token decode error:", err);
     }
   }
 
@@ -25,14 +24,16 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <h2 className="brand" onClick={() => navigate('/')}>🎓 One Portal</h2>
-      <div className="nav-links">
+      <div className="navbar-left" onClick={() => navigate('/')}>
+        🎓 <span className="logo-text">One Portal Every Campus</span>
+      </div>
+      <div className="navbar-right">
         {token ? (
           <>
             <button onClick={() => navigate('/dashboard')}>Dashboard</button>
             <button onClick={() => navigate('/events')}>Events</button>
             <button onClick={() => navigate('/my-events')}>My Events</button>
-            <button onClick={() => navigate('/create-event')}>Create Event</button>
+            <button onClick={() => navigate('/create-event')}>Create</button>
             {isAdmin && <button onClick={() => navigate('/admin')}>Admin</button>}
             <button className="logout" onClick={handleLogout}>Logout</button>
           </>
