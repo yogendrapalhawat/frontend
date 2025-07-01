@@ -1,3 +1,4 @@
+// src/components/Navbar.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +7,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/'); // redirect to login
+    navigate('/'); // redirect to home/login page
   };
 
   return (
@@ -17,8 +18,12 @@ const Navbar = () => {
       justifyContent: 'space-between',
       alignItems: 'center'
     }}>
-      <h2>🎓 One Portal</h2>
-      <button onClick={handleLogout}>Logout</button>
+      <h2 style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🎓 One Portal</h2>
+      <div>
+        <button onClick={() => navigate('/dashboard')} style={{ marginRight: '10px' }}>Dashboard</button>
+        <button onClick={() => navigate('/events')} style={{ marginRight: '10px' }}>Events</button>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 };
