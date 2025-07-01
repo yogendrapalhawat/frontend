@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://one-portal-backend.onrender.com', // replace with your Render backend URL
+  baseURL: 'https://one-portal-backend.onrender.com/api', 
 });
 
 export const getAllEvents = async () => {
