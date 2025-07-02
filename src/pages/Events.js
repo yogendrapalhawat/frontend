@@ -24,7 +24,7 @@ const Events = () => {
 
     const fetchMyEvents = async () => {
       try {
-        const res = await api.get('/users/my-events', {
+        const res = await api.get('/events/my', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const ids = new Set(res.data.map(e => e._id));
@@ -50,7 +50,7 @@ const Events = () => {
 
   const handleJoin = async (eventId) => {
     try {
-      await api.post(`/events/${eventId}/join`, {}, {
+      await api.post(`/events/${eventId}/register`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Joined event successfully!');
