@@ -14,7 +14,6 @@ const AdminDashboard = () => {
 
   const token = localStorage.getItem('token');
 
-  // ✅ useCallback wrapped fetchAllData (fixes ESLint warning)
   const fetchAllData = useCallback(async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -34,20 +33,15 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     let result = [...events];
-
-    // 🔍 Search
     if (search) {
       result = result.filter(e =>
         e.title.toLowerCase().includes(search.toLowerCase())
       );
     }
-
-    // 🔁 Filter logic
     if (filter.tag) result = result.filter(e => e.tags.includes(filter.tag));
     if (filter.status) result = result.filter(e => e.eventStatus === filter.status);
     if (filter.startDate) result = result.filter(e => new Date(e.startDate) >= new Date(filter.startDate));
 
-    // 📤 Sort by start date ascending
     result.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
     setFilteredEvents(result);
@@ -103,24 +97,24 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-6 max-w-6xl mx-auto mt-6">
         <h2 className="text-3xl font-bold mb-6 text-center">👑 Admin Dashboard</h2>
 
         {/* 🔍 Search + Filters */}
-        <div className="bg-gray-100 p-4 rounded-md mb-6 flex flex-wrap gap-4 items-end">
-          <div>
-            <label className="block font-semibold">Search Title</label>
+        <div className="bg-gray-100 p-4 rounded-md mb-6 flex flex-wrap gap-4 items-end border border-gray-300 shadow-sm">
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1">Search Title</label>
             <input
               type="text"
-              className="border p-2"
+              className="border p-2 w-48"
               placeholder="e.g. AI Hackathon"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div>
-            <label className="block font-semibold">Tag</label>
-            <select className="border p-2" value={filter.tag} onChange={(e) => setFilter({ ...filter, tag: e.target.value })}>
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1">Tag</label>
+            <select className="border p-2 w-48" value={filter.tag} onChange={(e) => setFilter({ ...filter, tag: e.target.value })}>
               <option value="">All</option>
               <option value="Hackathon">Hackathon</option>
               <option value="AI">AI</option>
@@ -130,26 +124,26 @@ const AdminDashboard = () => {
               <option value="Coding">Coding</option>
             </select>
           </div>
-          <div>
-            <label className="block font-semibold">Status</label>
-            <select className="border p-2" value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1">Status</label>
+            <select className="border p-2 w-48" value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
               <option value="">All</option>
               <option value="Upcoming">Upcoming</option>
               <option value="Ongoing">Ongoing</option>
               <option value="Past">Past</option>
             </select>
           </div>
-          <div>
-            <label className="block font-semibold">Start After</label>
+          <div className="flex flex-col">
+            <label className="font-semibold mb-1">Start After</label>
             <input
               type="date"
-              className="border p-2"
+              className="border p-2 w-48"
               value={filter.startDate}
               onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
             />
           </div>
           <button
-            className="bg-gray-600 text-white px-4 py-2 rounded"
+            className="bg-gray-700 text-white px-4 py-2 rounded h-fit mt-auto"
             onClick={() => { setFilter({ tag: '', status: '', startDate: '' }); setSearch(''); }}
           >
             Clear
