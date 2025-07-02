@@ -1,21 +1,30 @@
 // src/components/Navbar.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css'; // 💅 Stylish CSS
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
   const token = localStorage.getItem('token');
 
-  let isAdmin = false;
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      isAdmin = payload?.isAdmin;
-    } catch (err) {
-      console.error("Token decode error:", err);
+  useEffect(() => {
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload?.isAdmin) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (err) {
+        console.error("❌ Token decode error:", err);
+        setIsAdmin(false); // fallback
+      }
+    } else {
+      setIsAdmin(false);
     }
-  }
+  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -27,6 +36,7 @@ const Navbar = () => {
       <div className="navbar-left" onClick={() => navigate('/')}>
         🎓 <span className="logo-text">One Portal Every Campus</span>
       </div>
+
       <div className="navbar-right">
         {token ? (
           <>
