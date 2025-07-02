@@ -1,85 +1,136 @@
 // src/pages/Events.js
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import Navbar from '../components/Navbar';
 
 const Events = () => {
   const [events, setEvents] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [filtered, setFiltered] = useState([]);
+  const [filter, setFilter] = useState({ tag: '', status: '', startDate: '', search: '' });
+  const [joinedEventIds, setJoinedEventIds] = useState(new Set());
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    setUserId(payload.userId);
-
     const fetchEvents = async () => {
       try {
-        const res = await api.get('/events');
+        const res = await api.get('/events', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setEvents(res.data);
+        setFiltered(res.data);
       } catch (err) {
-        alert('Error loading events');
+        console.error('Error loading events:', err);
+      }
+    };
+
+    const fetchMyEvents = async () => {
+      try {
+        const res = await api.get('/users/my-events', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const ids = new Set(res.data.map(e => e._id));
+        setJoinedEventIds(ids);
+      } catch (err) {
+        console.error('Error loading joined events:', err);
       }
     };
 
     fetchEvents();
-  }, []);
+    fetchMyEvents();
+  }, [token]);
 
-  const handleJoin = async (id) => {
-    const token = localStorage.getItem('token');
+  useEffect(() => {
+    let result = [...events];
+    if (filter.tag) result = result.filter(e => e.tags.includes(filter.tag));
+    if (filter.status) result = result.filter(e => e.eventStatus === filter.status);
+    if (filter.startDate) result = result.filter(e => new Date(e.startDate) >= new Date(filter.startDate));
+    if (filter.search) result = result.filter(e => e.title.toLowerCase().includes(filter.search.toLowerCase()));
+    result = result.filter(e => !joinedEventIds.has(e._id));
+    setFiltered(result);
+  }, [filter, events, joinedEventIds]);
+
+  const handleJoin = async (eventId) => {
     try {
-      await api.post(`/events/${id}/register`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
+      await api.post(`/events/${eventId}/join`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      alert('Registered!');
-      const res = await api.get('/events');
-      setEvents(res.data);
+      alert('Joined event successfully!');
+      setJoinedEventIds(prev => new Set(prev.add(eventId)));
     } catch (err) {
-      alert(err.response?.data?.message || 'Join failed');
+      console.error('Join failed:', err.response?.data || err.message);
+      alert('Failed to join event: ' + (err.response?.data?.message || err.message));
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="p-6 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Available Events</h2>
-        {events.length === 0 ? (
-          <p className="text-center text-gray-600">No events available right now.</p>
-        ) : (
-          events.map(event => {
-            const isRegistered = event.registeredUsers?.includes(userId);
-            return (
-              <div key={event._id} className="bg-white shadow-md rounded-md p-4 mb-6 border border-gray-200">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-bold text-blue-600">{event.title}</h3>
-                  <span className={`text-sm font-semibold px-2 py-1 rounded ${event.eventStatus === 'Upcoming' ? 'bg-yellow-100 text-yellow-800' : event.eventStatus === 'Ongoing' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'}`}>
-                    {event.eventStatus}
-                  </span>
-                </div>
-                <p className="text-gray-700 mb-2">{event.description}</p>
-                <p className="text-sm text-gray-600">
-                  <strong>Type:</strong> {event.eventType} | <strong>Tags:</strong> {event.tags.join(', ')}<br />
-                  <strong>Dates:</strong> {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
-                </p>
-                <div className="mt-4">
-                  {isRegistered ? (
-                    <button disabled className="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed">
-                      ✅ Registered
-                    </button>
-                  ) : (
-                    <button onClick={() => handleJoin(event._id)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                      Join
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })
-        )}
+    <div className="p-6 max-w-6xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">📅 Available Events</h2>
+
+      {/* 🔍 Filter UI */}
+      <div className="bg-gray-100 p-4 rounded-md mb-6 flex flex-wrap gap-4 items-end">
+        <div>
+          <label className="block font-semibold">Tag</label>
+          <select className="border p-2" value={filter.tag} onChange={e => setFilter({ ...filter, tag: e.target.value })}>
+            <option value="">All</option>
+            <option value="Hackathon">Hackathon</option>
+            <option value="AI">AI</option>
+            <option value="Sports">Sports</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Debate">Debate</option>
+            <option value="Coding">Coding</option>
+          </select>
+        </div>
+        <div>
+          <label className="block font-semibold">Status</label>
+          <select className="border p-2" value={filter.status} onChange={e => setFilter({ ...filter, status: e.target.value })}>
+            <option value="">All</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Past">Past</option>
+          </select>
+        </div>
+        <div>
+          <label className="block font-semibold">Start After</label>
+          <input type="date" className="border p-2" value={filter.startDate} onChange={e => setFilter({ ...filter, startDate: e.target.value })} />
+        </div>
+        <div>
+          <label className="block font-semibold">Search Title</label>
+          <input type="text" className="border p-2" placeholder="Search..." value={filter.search} onChange={e => setFilter({ ...filter, search: e.target.value })} />
+        </div>
+        <button
+          className="bg-gray-600 text-white px-4 py-2 rounded"
+          onClick={() => setFilter({ tag: '', status: '', startDate: '', search: '' })}
+        >
+          Clear
+        </button>
       </div>
-    </>
+
+      {/* 🎯 Event List */}
+      {filtered.length === 0 ? (
+        <p>No events found.</p>
+      ) : (
+        <ul>
+          {filtered.map(event => (
+            <li key={event._id} className="border p-4 mb-4 rounded shadow bg-white">
+              <h3 className="font-bold text-lg text-blue-700">{event.title}</h3>
+              <p className="text-sm text-gray-600">{event.eventStatus}</p>
+              <p className="text-sm text-gray-700 mb-2">{event.description}</p>
+              <p className="text-sm text-gray-500">
+                <strong>Type:</strong> {event.eventType} | <strong>Tags:</strong> {event.tags.join(', ')}
+              </p>
+              <p className="text-sm text-gray-400">
+                <strong>Dates:</strong> {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
+              </p>
+              <button
+                className="mt-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                onClick={() => handleJoin(event._id)}
+              >
+                Join
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

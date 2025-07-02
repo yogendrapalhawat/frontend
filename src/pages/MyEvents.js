@@ -1,63 +1,73 @@
+// src/pages/MyEvents.js
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import Navbar from '../components/Navbar';
 
 const MyEvents = () => {
-  const [myEvents, setMyEvents] = useState([]);
+  const [joinedEvents, setJoinedEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchJoinedEvents = async () => {
       try {
-        const res = await api.get('/events/my', {
-          headers: { Authorization: `Bearer ${token}` }
+        const res = await api.get('/events/joined', {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setMyEvents(res.data);
-      } catch {
-        alert('Error fetching your events');
+        const uniqueEvents = Array.from(
+          new Map(res.data.map((e) => [e._id, e])).values()
+        );
+        setJoinedEvents(uniqueEvents);
+      } catch (err) {
+        console.error('Error loading joined events', err);
+      } finally {
+        setLoading(false);
       }
     };
-    if (token) fetchEvents();
+    fetchJoinedEvents();
   }, [token]);
 
-  const handleLeave = async (id) => {
+  const handleLeave = async (eventId) => {
+    if (!window.confirm('Are you sure you want to leave this event?')) return;
     try {
-      await api.post(`/events/${id}/leave`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
+      await api.post(`/events/${eventId}/leave`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setMyEvents(prev => prev.filter(ev => ev._id !== id));
-      alert('✅ You have left the event');
-    } catch {
+      setJoinedEvents(prev => prev.filter(e => e._id !== eventId));
+    } catch (err) {
       alert('Failed to leave event');
     }
   };
 
+  if (loading) return <div className="p-6">Loading your events...</div>;
+
   return (
-    <>
-      <Navbar />
-      <div className="p-6 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4 text-center">🎟 My Registered Events</h2>
-        {myEvents.length === 0 ? (
-          <p className="text-center text-gray-500">You haven't joined any events yet.</p>
-        ) : (
-          myEvents.map(event => (
-            <div key={event._id} className="bg-white p-4 border mb-4 rounded shadow">
-              <h3 className="text-xl font-bold text-blue-600">{event.title}</h3>
-              <p>{event.description}</p>
-              <p className="text-sm text-gray-600">
-                {event.eventType} | {event.eventStatus} | {event.tags.join(', ')}
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">📝 My Registered Events</h2>
+      {joinedEvents.length === 0 ? (
+        <p>You haven’t joined any events yet.</p>
+      ) : (
+        <ul>
+          {joinedEvents.map(event => (
+            <li key={event._id} className="border p-4 mb-4 rounded shadow">
+              <h3 className="font-bold text-lg text-blue-700">{event.title}</h3>
+              <p className="text-sm text-gray-700">{event.description}</p>
+              <p className="text-sm text-gray-500">
+                {event.eventType} | {event.eventStatus} | {event.tags?.join(', ')}
+              </p>
+              <p className="text-sm text-gray-400">
+                {new Date(event.startDate).toLocaleDateString()} → {new Date(event.endDate).toLocaleDateString()}
               </p>
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+                className="bg-red-500 text-white px-3 py-1 mt-2 rounded hover:bg-red-600"
                 onClick={() => handleLeave(event._id)}
               >
                 Leave Event
               </button>
-            </div>
-          ))
-        )}
-      </div>
-    </>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

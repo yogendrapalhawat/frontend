@@ -1,3 +1,4 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
@@ -7,7 +8,6 @@ import Dashboard from './pages/Dashboard';
 import CreateEvent from './pages/CreateEvent';
 import MyEvents from './pages/MyEvents';             // ✅ My Events
 import AdminDashboard from './pages/AdminDashboard';
-//import Unauthorized from './pages/Unauthorized';     // ✅ Optional
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';    // ✅ Admin-only route
@@ -20,7 +20,6 @@ function App() {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-   
 
         {/* Protected routes */}
         <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
