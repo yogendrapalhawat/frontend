@@ -43,7 +43,6 @@ const AdminDashboard = () => {
     if (filter.startDate) result = result.filter(e => new Date(e.startDate) >= new Date(filter.startDate));
 
     result.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-
     setFilteredEvents(result);
   }, [filter, events, search]);
 
@@ -97,7 +96,7 @@ const AdminDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-6xl mx-auto mt-6">
+      <div className="p-6 max-w-6xl mx-auto mt-16">
         <h2 className="text-3xl font-bold mb-6 text-center">👑 Admin Dashboard</h2>
 
         {/* 🔍 Search + Filters */}
@@ -156,10 +155,7 @@ const AdminDashboard = () => {
           {users.map(user => (
             <li key={user._id} className="border p-2 mb-2 flex justify-between items-center">
               <span>{user.name} ({user.email})</span>
-              <button
-                className="bg-red-500 text-white px-3 py-1 rounded"
-                onClick={() => handleDeleteUser(user._id)}
-              >
+              <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleDeleteUser(user._id)}>
                 Delete
               </button>
             </li>
