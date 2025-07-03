@@ -1,30 +1,19 @@
-// src/components/Navbar.js
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Navbar.css'; // 💅 Stylish CSS
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload?.isAdmin) {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-      } catch (err) {
-        console.error("❌ Token decode error:", err);
-        setIsAdmin(false); // fallback
-      }
-    } else {
-      setIsAdmin(false);
+  let isAdmin = false;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      isAdmin = payload?.isAdmin;
+    } catch (err) {
+      console.error("Token decode error:", err);
     }
-  }, [token]);
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -32,12 +21,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-left" onClick={() => navigate('/')}>
-        🎓 <span className="logo-text">One Portal Every Campus</span>
+    <nav className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4 flex justify-between shadow-md">
+      <div className="text-lg font-bold cursor-pointer" onClick={() => navigate('/')}>
+        🎓 One Portal Every Campus
       </div>
-
-      <div className="navbar-right">
+      <div className="space-x-3">
         {token ? (
           <>
             <button onClick={() => navigate('/dashboard')}>Dashboard</button>
@@ -45,7 +33,7 @@ const Navbar = () => {
             <button onClick={() => navigate('/my-events')}>My Events</button>
             <button onClick={() => navigate('/create-event')}>Create</button>
             {isAdmin && <button onClick={() => navigate('/admin')}>Admin</button>}
-            <button className="logout" onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout} className="bg-white text-black px-3 py-1 rounded">Logout</button>
           </>
         ) : (
           <>

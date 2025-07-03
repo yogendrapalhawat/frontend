@@ -1,50 +1,11 @@
-/* src/styles/dashboard.css */
-
-.dashboard-container {
-    display: flex;
-    min-height: 100vh;
-    background: #f5f7fa;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    background: linear-gradient(135deg, #f0f0f0, #fafafa);
-  }
-  
-  .dashboard-widgets {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    color: #333;
-  }
-  
-  .gradient-card {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-  }
-  
-  .gradient-card-blue {
-    background: linear-gradient(135deg, #2193b0, #6dd5ed);
-    color: white;
-  }
-  
-  .gradient-card-green {
-    background: linear-gradient(135deg, #56ab2f, #a8e063);
-    color: white;
-  }
-  
-  .gradient-card-orange {
-    background: linear-gradient(135deg, #ff9966, #ff5e62);
-    color: white;
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+    content: [
+      "./src/**/*.{js,jsx,ts,tsx}",
+    ],
+    theme: {
+      extend: {},
+    },
+    plugins: [],
   }
   
