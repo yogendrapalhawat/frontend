@@ -1,54 +1,35 @@
 // src/pages/Dashboard.js
-import React, { useEffect, useState } from 'react';
-import api from '../api';
-import Navbar from '../components/Navbar';
+import React from 'react';
+import Sidebar from '../components/Sidebar';
+import Topbar from '../components/Topbar';
+import './dashboard.css';
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const token = localStorage.getItem('token');
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get('/users/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        // Backend returns { user: { name, email, ... } }
-        setUser(res.data.user || res.data);
-      } catch (err) {
-        console.error("Dashboard fetch error:", err.response?.data || err.message);
-        setError(err.response?.data?.message || 'Unauthorized or Error fetching user');
-      }
-    };
-
-    if (token) fetchUser();
-    else setError('Token not found. Please login again.');
-  }, [token]);
-
   return (
-    <>
-      <Navbar />
-      <div className="p-6 max-w-xl mx-auto text-center">
-        <h2 className="text-2xl font-bold mb-4">📊 Dashboard</h2>
-
-        {error && <p className="text-red-600 font-semibold">{error}</p>}
-
-        {user && (
-          <div className="bg-white shadow-md rounded p-4 border border-gray-200">
-            <p><strong>Name:</strong> {user.name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
+    <div className="dashboard-container">
+      <Sidebar />
+      <div className="main-content">
+        <Topbar />
+        <div className="dashboard-widgets">
+          <div className="card gradient-card">
+            <h3>🎯 Total Events</h3>
+            <p>12 Active</p>
           </div>
-        )}
-
-        {!user && !error && (
-          <p className="text-gray-500">Loading...</p>
-        )}
+          <div className="card gradient-card-blue">
+            <h3>👥 Total Students</h3>
+            <p>256+</p>
+          </div>
+          <div className="card gradient-card-green">
+            <h3>📚 My Events</h3>
+            <p>4 Joined</p>
+          </div>
+          <div className="card gradient-card-orange">
+            <h3>🛠️ Skills Trending</h3>
+            <p>ReactJS, ML, Web3</p>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

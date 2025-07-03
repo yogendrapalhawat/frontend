@@ -1,0 +1,29 @@
+/* src/components/topbar.css */
+
+.topbar {
+    background: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-radius: 12px;
+  }
+  
+  .welcome-msg {
+    font-size: 1.2em;
+    color: #444;
+  }
+  
+  .profile-circle {
+    background: #764ba2;
+    color: white;
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  

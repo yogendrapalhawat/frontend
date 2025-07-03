@@ -6,31 +6,34 @@ import Register from './pages/Register';
 import Events from './pages/Events';
 import Dashboard from './pages/Dashboard';
 import CreateEvent from './pages/CreateEvent';
-import MyEvents from './pages/MyEvents';             // ✅ My Events
+import MyEvents from './pages/MyEvents';
 import AdminDashboard from './pages/AdminDashboard';
-import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';    // ✅ Admin-only route
+import AdminRoute from './components/AdminRoute';
+import Layout from './components/Layout'; // 🆕 Common layout with sidebar+topbar
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
-        {/* Public routes */}
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected routes */}
-        <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/create-event" element={<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
-        <Route path="/my-events" element={<ProtectedRoute><MyEvents /></ProtectedRoute>} />
+        {/* Protected Routes (with layout) */}
+        <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/my-events" element={<MyEvents />} />
+          <Route path="/create-event" element={<CreateEvent />} />
+        </Route>
 
-        {/* Admin-only route */}
-        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        {/* Admin Routes */}
+        <Route element={<AdminRoute><Layout /></AdminRoute>}>
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Route>
 
-        {/* Default route */}
+        {/* Default landing */}
         <Route path="/" element={
           <div className="text-center p-10 text-xl">
             Welcome to <strong>One Portal 🎓</strong>
