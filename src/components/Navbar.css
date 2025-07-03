@@ -1,61 +1,44 @@
-/* src/components/Navbar.css */
-
 .navbar {
-  background: linear-gradient(to right, #003973, #e5e5be); /* blue to cream */
-  color: white;
-  padding: 12px 25px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Segoe UI', sans-serif;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-
-  /* NEW */
-  position: sticky;
-  top: 0;
-  z-index: 50;
 }
 
-.navbar-left {
-  font-size: 1.8rem;
+.navbar-logo {
+  font-size: 24px;
   font-weight: bold;
-  cursor: pointer;
-  color: #ffffff;
+  color: #7e22ce; /* purple-600 */
+  text-decoration: none;
+}
+
+.navbar-links {
   display: flex;
-  align-items: center;
+  gap: 16px;
 }
 
-.logo-text {
-  margin-left: 8px;
-  color: #f0f0f0;
+.nav-link {
+  color: #4b5563; /* gray-700 */
+  text-decoration: none;
+  transition: color 0.3s;
 }
 
-.navbar-right button {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid transparent;
-  color: #ffffff;
-  margin-left: 10px;
-  padding: 8px 15px;
-  font-size: 0.95rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.nav-link:hover {
+  color: #7e22ce; /* purple-600 */
 }
 
-.navbar-right button:hover {
-  background-color: #ffffff;
-  color: #003973;
-  border-color: #003973;
-  transform: scale(1.05);
-}
-
-.logout {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-}
-
-.logout:hover {
-  background-color: #e60000;
-  color: white;
+.nav-button {
+  color: #7e22ce;
+  font-weight: 600;
+  text-decoration: none;
 }

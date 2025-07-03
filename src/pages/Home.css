@@ -1,0 +1,62 @@
+/* home.css */
+
+.home-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #c084fc, #60a5fa); /* Purple to Blue */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .home-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .home-subtitle {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .home-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .btn.primary {
+    background-color: #6d28d9; /* Purple */
+    color: white;
+  }
+  
+  .btn.secondary {
+    background-color: #2563eb; /* Blue */
+    color: white;
+  }
+  
+  .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  

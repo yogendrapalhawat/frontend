@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import './Register.css'; // 👈 Don't forget to create this CSS file
 
 function Register() {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ function Register() {
         name,
         username,
         email,
-        password
+        password,
       });
       alert('🎉 Registration successful!');
       navigate('/login');
@@ -27,46 +28,40 @@ function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">🔐 Register</h2>
+    <div className="register-container">
+      <div className="register-box">
+        <h2>🔐 Register</h2>
 
         <input
           type="text"
           placeholder="Full Name"
-          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="register-input"
         />
-
         <input
           type="text"
           placeholder="Username"
-          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="register-input"
         />
-
         <input
           type="email"
           placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="register-input"
         />
-
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-6 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="register-input"
         />
 
-        <button
-          onClick={handleRegister}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
-        >
+        <button onClick={handleRegister} className="register-button">
           Register
         </button>
       </div>

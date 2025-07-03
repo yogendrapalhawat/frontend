@@ -1,16 +1,20 @@
+// src/components/AdminRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const AdminRoute = ({ children }) => {
   const token = localStorage.getItem('token');
-  if (!token) return <Navigate to="/login" />;
 
+  let user = null;
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.isAdmin ? children : <Navigate to="/dashboard" />;
-  } catch {
-    return <Navigate to="/login" />;
+    user = JSON.parse(localStorage.getItem('user'));
+  } catch (e) {
+    console.error('Failed to parse user from localStorage:', e);
   }
+
+  const isAdmin = token && user && user.isAdmin;
+
+  return isAdmin ? children : <Navigate to="/" replace />;
 };
 
 export default AdminRoute;

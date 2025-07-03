@@ -3,7 +3,7 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import { Outlet } from 'react-router-dom';
-import '../styles/dashboard.css'; // or global layout styles
+import './Layout.css'; // ✅ Use a local CSS file
 
 const Layout = () => {
   return (
@@ -11,7 +11,7 @@ const Layout = () => {
       <Sidebar />
       <div className="main-content">
         <Topbar />
-        <div className="p-4">
+        <div className="content-area">
           <Outlet />
         </div>
       </div>

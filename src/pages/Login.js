@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import './Login.css'; // Make sure to create this CSS file
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,10 +13,8 @@ function Login() {
     try {
       const res = await api.post('/users/login', { email, password });
 
-      // ✅ Store token
       localStorage.setItem('token', res.data.token);
 
-      // ✅ Success alert & navigation
       alert('Login Successful');
       console.log('Token:', res.data.token);
       navigate('/dashboard');
@@ -26,27 +25,27 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
-      <h2>🔐 Login</h2>
-      <input
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ padding: '10px', width: '250px', margin: '10px' }}
-      />
-      <br />
-      <input
-        placeholder="Password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ padding: '10px', width: '250px', margin: '10px' }}
-      />
-      <br />
-      <button
-        onClick={handleLogin}
-        style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}
-      >
-        Login
-      </button>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>🔐 Login to Your Account</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="login-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="login-input"
+        />
+        <button className="login-button" onClick={handleLogin}>
+          Login
+        </button>
+      </div>
     </div>
   );
 }

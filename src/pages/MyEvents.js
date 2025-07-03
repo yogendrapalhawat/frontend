@@ -1,71 +1,56 @@
 // src/pages/MyEvents.js
 import React, { useEffect, useState } from 'react';
 import api from '../api';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const MyEvents = () => {
-  const [joinedEvents, setJoinedEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    const fetchJoinedEvents = async () => {
-      try {
-        const res = await api.get('/events/joined', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const uniqueEvents = Array.from(
-          new Map(res.data.map((e) => [e._id, e])).values()
-        );
-        setJoinedEvents(uniqueEvents);
-      } catch (err) {
-        console.error('Error loading joined events', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJoinedEvents();
-  }, [token]);
-
-  const handleLeave = async (eventId) => {
-    if (!window.confirm('Are you sure you want to leave this event?')) return;
+  const fetchMyEvents = async () => {
     try {
-      await api.post(`/events/${eventId}/leave`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setJoinedEvents(prev => prev.filter(e => e._id !== eventId));
+      const res = await api.get('/events/myevents');
+      setEvents(res.data);
     } catch (err) {
-      alert('Failed to leave event');
+      console.error('Fetch my events error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <div className="p-6">Loading your events...</div>;
+  const handleLeave = async (eventId) => {
+    try {
+      await api.post(`/events/leave/${eventId}`);
+      fetchMyEvents();
+    } catch (err) {
+      console.error('Leave error:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchMyEvents();
+  }, []);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">📝 My Registered Events</h2>
-      {joinedEvents.length === 0 ? (
-        <p>You haven’t joined any events yet.</p>
+    <div className="my-events-page">
+      <h2 className="page-title">My Joined Events</h2>
+      {loading ? (
+        <LoadingSpinner />
       ) : (
-        <ul>
-          {joinedEvents.map(event => (
-            <li key={event._id} className="border p-4 mb-4 rounded shadow">
-              <h3 className="font-bold text-lg text-blue-700">{event.title}</h3>
-              <p className="text-sm text-gray-700">{event.description}</p>
-              <p className="text-sm text-gray-500">
-                {event.eventType} | {event.eventStatus} | {event.tags?.join(', ')}
-              </p>
-              <p className="text-sm text-gray-400">
-                {new Date(event.startDate).toLocaleDateString()} → {new Date(event.endDate).toLocaleDateString()}
-              </p>
+        <div className="events-grid">
+          {events.map(event => (
+            <div key={event._id} className="event-card">
+              <h3>{event.name}</h3>
+              <p>{event.description}</p>
               <button
-                className="bg-red-500 text-white px-3 py-1 mt-2 rounded hover:bg-red-600"
                 onClick={() => handleLeave(event._id)}
+                className="leave-btn"
               >
-                Leave Event
+                Leave
               </button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

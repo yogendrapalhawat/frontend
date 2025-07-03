@@ -1,19 +1,19 @@
 // src/components/Sidebar.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './sidebar.css';
+import { Link } from 'react-router-dom';
+import './Sidebar.css'; // ✅ Import custom CSS
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="sidebar">
-      <div className="logo">🎓 One Portal</div>
-      <button onClick={() => navigate('/dashboard')}>🏠 Dashboard</button>
-      <button onClick={() => navigate('/events')}>📅 Events</button>
-      <button onClick={() => navigate('/my-events')}>⭐ My Events</button>
-      <button onClick={() => navigate('/create-event')}>➕ Create Event</button>
-      <button onClick={() => navigate('/admin')}>🛡️ Admin Panel</button>
+      <h2 className="sidebar-heading">📌 Navigation</h2>
+      <nav className="sidebar-nav">
+        <Link to="/dashboard" className="sidebar-link">📊 Dashboard</Link>
+        <Link to="/events" className="sidebar-link">📅 Events</Link>
+        <Link to="/create-event" className="sidebar-link">➕ Create Event</Link>
+        <Link to="/my-events" className="sidebar-link">✅ My Events</Link>
+        <Link to="/admin" className="sidebar-link">🛡️ Admin Panel</Link>
+      </nav>
     </div>
   );
 };
