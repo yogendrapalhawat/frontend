@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://one-portal-backend.onrender.com/api',  // ✅ Your correct backend URL
+  baseURL: 'https://one-portal-backend.onrender.com/api',
+  withCredentials: true // Only if you're using cookies
 });
 
 
