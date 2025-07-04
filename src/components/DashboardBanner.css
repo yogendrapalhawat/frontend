@@ -1,0 +1,50 @@
+.dashboard-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, #f3e8ff, #e9d5ff); /* light purple gradient */
+    padding: 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(120, 0, 200, 0.1);
+  }
+  
+  .dashboard-banner-content {
+    max-width: 50%;
+  }
+  
+  .dashboard-banner-content h1 {
+    font-size: 2.5rem;
+    color: #6b21a8;
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-banner-content h1 span {
+    color: #9333ea;
+  }
+  
+  .dashboard-banner-content p {
+    color: #4b5563;
+    font-size: 1.1rem;
+  }
+  
+  .dashboard-banner-image img {
+    max-width: 300px;
+    height: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-banner {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .dashboard-banner-content, .dashboard-banner-image {
+      max-width: 100%;
+    }
+  
+    .dashboard-banner-image img {
+      margin-top: 20px;
+    }
+  }
+  

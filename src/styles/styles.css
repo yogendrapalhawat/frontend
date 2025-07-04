@@ -515,4 +515,14 @@ body {
     border-radius: 5px;
     border: none;
   }
-  
+  /* index.css or styles.css */
+body.dark {
+  background-color: #121212;
+  color: #e5e5e5;
+}
+.dashboard-page {
+  background: #f3f0ff;
+  min-height: 100vh;
+  padding: 20px;
+}
+

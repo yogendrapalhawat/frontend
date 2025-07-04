@@ -1,53 +1,52 @@
 // src/pages/MyEvents.js
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMyEvents = async () => {
-    try {
-      const res = await api.get('/events/myevents');
-      setEvents(res.data);
-    } catch (err) {
-      console.error('Fetch my events error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLeave = async (eventId) => {
-    try {
-      await api.post(`/events/leave/${eventId}`);
-      fetchMyEvents();
-    } catch (err) {
-      console.error('Leave error:', err);
-    }
-  };
-
   useEffect(() => {
+    const fetchMyEvents = async () => {
+      try {
+        const res = await api.get('/events/my-events'); // Backend route
+        setEvents(res.data);
+      } catch (err) {
+        console.error('Failed to fetch joined events:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchMyEvents();
   }, []);
 
   return (
-    <div className="my-events-page">
-      <h2 className="page-title">My Joined Events</h2>
+    <div className="my-events-page" style={{ padding: '20px' }}>
+      <h2 style={{ fontSize: '28px', color: '#6b21a8', marginBottom: '20px' }}>🎉 My Joined Events</h2>
+
       {loading ? (
-        <LoadingSpinner />
+        <p>Loading...</p>
+      ) : events.length === 0 ? (
+        <p style={{ fontSize: '18px', color: '#888' }}>You haven't joined any events yet.</p>
       ) : (
-        <div className="events-grid">
-          {events.map(event => (
-            <div key={event._id} className="event-card">
-              <h3>{event.name}</h3>
-              <p>{event.description}</p>
-              <button
-                onClick={() => handleLeave(event._id)}
-                className="leave-btn"
-              >
-                Leave
-              </button>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          {events.map((event) => (
+            <div
+              key={event._id}
+              style={{
+                backgroundColor: '#fff',
+                borderRadius: '10px',
+                padding: '20px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                transition: 'transform 0.3s',
+              }}
+              className="event-card"
+            >
+              <h3 style={{ fontSize: '20px', color: '#333' }}>{event.title}</h3>
+              <p><strong>Date:</strong> {new Date(event.startDate).toLocaleDateString()}</p>
+              <p><strong>Status:</strong> {event.status}</p>
+              <p><strong>Tag:</strong> {event.tag}</p>
             </div>
           ))}
         </div>
