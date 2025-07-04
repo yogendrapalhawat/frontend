@@ -9,10 +9,14 @@ const MyEvents = () => {
   useEffect(() => {
     const fetchMyEvents = async () => {
       try {
-        const res = await api.get('/events/my-events'); // Backend route
+        const res = await api.get('/events/my', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setEvents(res.data);
       } catch (err) {
-        console.error('Failed to fetch joined events:', err);
+        console.error('❌ Failed to fetch joined events:', err);
       } finally {
         setLoading(false);
       }
@@ -30,7 +34,13 @@ const MyEvents = () => {
       ) : events.length === 0 ? (
         <p style={{ fontSize: '18px', color: '#888' }}>You haven't joined any events yet.</p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '20px',
+          }}
+        >
           {events.map((event) => (
             <div
               key={event._id}
@@ -42,11 +52,13 @@ const MyEvents = () => {
                 transition: 'transform 0.3s',
               }}
               className="event-card"
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             >
               <h3 style={{ fontSize: '20px', color: '#333' }}>{event.title}</h3>
               <p><strong>Date:</strong> {new Date(event.startDate).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> {event.status}</p>
-              <p><strong>Tag:</strong> {event.tag}</p>
+              <p><strong>Status:</strong> {event.eventStatus}</p>
+              <p><strong>Tag:</strong> {event.tags.join(', ')}</p>
             </div>
           ))}
         </div>
