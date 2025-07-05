@@ -11,15 +11,26 @@ function Login() {
 
   const handleLogin = async () => {
     try {
+      // 🔐 API call to login
       const res = await api.post('/users/login', { email, password });
 
+      // ✅ Save JWT token
       localStorage.setItem('token', res.data.token);
 
-      alert('Login Successful');
-      console.log('Token:', res.data.token);
+      // ✅ Save user info (important for isAdmin check)
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+
+      // ✅ Optional: Debug log
+      console.log('🔐 Token:', res.data.token);
+      console.log('👤 User:', res.data.user);
+
+      // ✅ Alert and Navigate to dashboard
+      alert('✅ Login Successful');
+
+      // Redirect to dashboard (AdminRoute will handle admin routing)
       navigate('/dashboard');
     } catch (err) {
-      console.error('Login error:', err.response?.data || err.message);
+      console.error('❌ Login error:', err.response?.data || err.message);
       alert(err.response?.data?.message || 'Login failed');
     }
   };
@@ -28,6 +39,7 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <h2>🔐 Login to Your Account</h2>
+
         <input
           type="email"
           placeholder="Email"
@@ -35,6 +47,7 @@ function Login() {
           onChange={(e) => setEmail(e.target.value)}
           className="login-input"
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -42,6 +55,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           className="login-input"
         />
+
         <button className="login-button" onClick={handleLogin}>
           Login
         </button>

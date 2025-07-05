@@ -24,6 +24,11 @@ const Dashboard = () => {
     fetchProfile();
   }, []);
 
+  // ✅ Console log user whenever it's updated
+  useEffect(() => {
+    console.log('Fetched user:', user);
+  }, [user]);
+
   return (
     <div className="dashboard-wrapper">
       <DashboardBanner />

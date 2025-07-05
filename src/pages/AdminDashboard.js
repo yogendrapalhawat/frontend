@@ -2,8 +2,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
-import './AdminDashboard.css'; // ✅ Include this for upgraded styling
+import './AdminDashboard.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import AdminPanelTester from '../components/AdminPanelTester';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -101,6 +102,7 @@ const AdminDashboard = () => {
       <div className="admin-container">
         <h2 className="admin-heading">👑 Admin Dashboard</h2>
 
+        {/* 📊 Stats */}
         <div className="dashboard-grid">
           <div className="card stats-card">
             <h3>Total Users 👥</h3>
@@ -125,6 +127,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* 🔍 Filters */}
         <div className="filter-box">
           <input type="text" placeholder="🔍 Search event..." value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
           <select value={filter.tag} onChange={(e) => setFilter({ ...filter, tag: e.target.value })}>
@@ -146,6 +149,7 @@ const AdminDashboard = () => {
           <button onClick={() => setFilter({ tag: '', status: '', startDate: '', search: '' })}>Clear</button>
         </div>
 
+        {/* 📅 Events */}
         <h3 className="section-title">📋 Manage Events</h3>
         <div className="event-list">
           {filteredEvents.map(event => (
@@ -179,6 +183,7 @@ const AdminDashboard = () => {
           ))}
         </div>
 
+        {/* 👥 Users */}
         <h3 className="section-title">🧑‍💻 Users</h3>
         <ul className="user-list">
           {users.map(user => (
@@ -188,6 +193,9 @@ const AdminDashboard = () => {
             </li>
           ))}
         </ul>
+
+        {/* ✅ Tester */}
+        <AdminPanelTester />
       </div>
     </>
   );
