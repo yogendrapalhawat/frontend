@@ -1,0 +1,114 @@
+/* === src/styles/events.css === */
+
+.events-page {
+    padding: 32px;
+    background: linear-gradient(to bottom right, #eef2f7, #e0f7fa);
+    min-height: 100vh;
+  }
+  
+  .events-heading {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    color: #0f172a;
+    text-align: center;
+  }
+  
+  .no-events {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.2rem;
+  }
+  
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  
+  .event-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 6px solid #3b82f6;
+  }
+  
+  .event-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-header h3 {
+    font-size: 1.3rem;
+    color: #1e293b;
+  }
+  
+  .status {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .status.upcoming {
+    background: #e0f2fe;
+    color: #0284c7;
+  }
+  .status.ongoing {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+  .status.past {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+  
+  .description {
+    margin: 12px 0;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+  
+  .tags {
+    margin: 8px 0;
+  }
+  .tag {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-right: 6px;
+    display: inline-block;
+  }
+  
+  .date, .location {
+    color: #334155;
+    font-size: 0.9rem;
+    margin: 4px 0;
+  }
+  
+  .join-btn {
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .join-btn:hover {
+    background-color: #1e40af;
+  }
+  

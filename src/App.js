@@ -20,7 +20,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
-import './styles/styles.css';
+import './App.css'; // ✅ Global styles for layout, fonts, shadows, etc.
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -31,11 +31,11 @@ const Layout = ({ children }) => {
 
   return (
     <div className="app-container">
-      {/* ✅ Navbar always on top (only if not public) */}
+      {/* ✅ Show Navbar if NOT public route and user is logged in */}
       {!isPublic && token && <Navbar />}
 
       <div className="main-layout">
-        {/* ✅ Sidebar only after login and for protected routes */}
+        {/* ✅ Sidebar only on logged-in pages */}
         {!isPublic && token && <Sidebar />}
 
         <main className="main-content">
@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
         </main>
       </div>
 
-      {/* ✅ Footer always shows */}
+      {/* ✅ Footer always visible */}
       <Footer />
     </div>
   );
@@ -54,19 +54,34 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          {/* 🔓 Public Routes */}
+          {/* 🌐 Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* 🔒 Protected Routes */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-          <Route path="/create-event" element={<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
-          <Route path="/my-events" element={<ProtectedRoute><MyEvents /></ProtectedRoute>} />
-          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          {/* 🔐 Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+          />
+          <Route
+            path="/events"
+            element={<ProtectedRoute><Events /></ProtectedRoute>}
+          />
+          <Route
+            path="/create-event"
+            element={<ProtectedRoute><CreateEvent /></ProtectedRoute>}
+          />
+          <Route
+            path="/my-events"
+            element={<ProtectedRoute><MyEvents /></ProtectedRoute>}
+          />
+          <Route
+            path="/admin"
+            element={<AdminRoute><AdminDashboard /></AdminRoute>}
+          />
         </Routes>
       </Layout>
     </Router>

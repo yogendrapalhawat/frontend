@@ -5,14 +5,18 @@ import './Home.css';
 
 const Home = () => {
   return (
-    <div className="home-page">
-      <h1 className="home-title">One Portal, Every Campus</h1>
-      <p className="home-subtitle">
-        Find, Join, and Organize Campus Hackathons and Events effortlessly. One unified portal for all student campuses.
-      </p>
-      <div className="home-buttons">
-        <Link to="/register" className="btn primary">Get Started</Link>
-        <Link to="/login" className="btn secondary">Login</Link>
+    <div className="home-hero">
+      <div className="home-overlay">
+        <div className="home-container">
+          <h1 className="home-title">🚀 One Portal, Every Campus</h1>
+          <p className="home-subtitle">
+            Discover, Host, and Join college hackathons, tech fests, and learning events — all in one smart platform.
+          </p>
+          <div className="home-buttons">
+            <Link to="/register" className="btn primary">🎓 Join Now</Link>
+            <Link to="/login" className="btn secondary">🔐 Login</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

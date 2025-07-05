@@ -1,7 +1,9 @@
-// src/pages/AdminDashboard.js
+// === src/pages/AdminDashboard.js ===
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
+import './AdminDashboard.css'; // ✅ Include this for upgraded styling
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -9,7 +11,7 @@ const AdminDashboard = () => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [editingEventId, setEditingEventId] = useState(null);
   const [editForm, setEditForm] = useState({});
-  const [filter, setFilter] = useState({ tag: '', status: '', startDate: '' });
+  const [filter, setFilter] = useState({ tag: '', status: '', startDate: '', search: '' });
 
   const token = localStorage.getItem('token');
 
@@ -18,7 +20,7 @@ const AdminDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [userRes, eventRes] = await Promise.all([
         api.get('/users', config),
-        api.get('/events', config)
+        api.get('/events', config),
       ]);
       setUsers(userRes.data);
       setEvents(eventRes.data);
@@ -38,6 +40,7 @@ const AdminDashboard = () => {
     if (filter.tag) result = result.filter(e => e.tags.includes(filter.tag));
     if (filter.status) result = result.filter(e => e.eventStatus === filter.status);
     if (filter.startDate) result = result.filter(e => new Date(e.startDate) >= new Date(filter.startDate));
+    if (filter.search) result = result.filter(e => e.title.toLowerCase().includes(filter.search.toLowerCase()));
     setFilteredEvents(result);
   }, [filter, events]);
 
@@ -75,7 +78,7 @@ const AdminDashboard = () => {
   const handleUpdateEvent = async (id) => {
     try {
       await api.put(`/events/${id}`, editForm, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setEditingEventId(null);
       fetchAllData();
@@ -84,55 +87,69 @@ const AdminDashboard = () => {
     }
   };
 
+  const pieData = [
+    { name: 'Upcoming', value: events.filter(e => e.eventStatus === 'Upcoming').length },
+    { name: 'Ongoing', value: events.filter(e => e.eventStatus === 'Ongoing').length },
+    { name: 'Past', value: events.filter(e => e.eventStatus === 'Past').length },
+  ];
+
+  const COLORS = ['#34d399', '#60a5fa', '#a78bfa'];
+
   return (
     <>
       <Navbar />
       <div className="admin-container">
         <h2 className="admin-heading">👑 Admin Dashboard</h2>
 
-        <div className="filter-box">
-          <div>
-            <label>Tag</label>
-            <select value={filter.tag} onChange={(e) => setFilter({ ...filter, tag: e.target.value })}>
-              <option value="">All</option>
-              <option value="Hackathon">Hackathon</option>
-              <option value="AI">AI</option>
-              <option value="Sports">Sports</option>
-              <option value="Workshop">Workshop</option>
-              <option value="Debate">Debate</option>
-              <option value="Coding">Coding</option>
-            </select>
+        <div className="dashboard-grid">
+          <div className="card stats-card">
+            <h3>Total Users 👥</h3>
+            <p>{users.length}</p>
           </div>
-          <div>
-            <label>Status</label>
-            <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
-              <option value="">All</option>
-              <option value="Upcoming">Upcoming</option>
-              <option value="Ongoing">Ongoing</option>
-              <option value="Past">Past</option>
-            </select>
+          <div className="card stats-card">
+            <h3>Total Events 📅</h3>
+            <p>{events.length}</p>
           </div>
-          <div>
-            <label>Start After</label>
-            <input type="date" value={filter.startDate} onChange={(e) => setFilter({ ...filter, startDate: e.target.value })} />
+          <div className="card chart-card">
+            <h3>Event Status Stats 📊</h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={60}>
+                  {pieData.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-          <button className="btn-clear" onClick={() => setFilter({ tag: '', status: '', startDate: '' })}>Clear</button>
         </div>
 
-        <h3 className="section-title">👥 Users ({users.length})</h3>
-        <ul className="user-list">
-          {users.map(user => (
-            <li key={user._id}>
-              <span>{user.name} ({user.email})</span>
-              <button className="btn-danger" onClick={() => handleDeleteUser(user._id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        <div className="filter-box">
+          <input type="text" placeholder="🔍 Search event..." value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
+          <select value={filter.tag} onChange={(e) => setFilter({ ...filter, tag: e.target.value })}>
+            <option value="">All Tags</option>
+            <option value="Hackathon">Hackathon</option>
+            <option value="AI">AI</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Sports">Sports</option>
+            <option value="Debate">Debate</option>
+            <option value="Coding">Coding</option>
+          </select>
+          <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
+            <option value="">All Status</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Past">Past</option>
+          </select>
+          <input type="date" value={filter.startDate} onChange={(e) => setFilter({ ...filter, startDate: e.target.value })} />
+          <button onClick={() => setFilter({ tag: '', status: '', startDate: '', search: '' })}>Clear</button>
+        </div>
 
-        <h3 className="section-title">📅 Events ({filteredEvents.length})</h3>
-        <ul className="event-list">
+        <h3 className="section-title">📋 Manage Events</h3>
+        <div className="event-list">
           {filteredEvents.map(event => (
-            <li key={event._id}>
+            <div key={event._id} className="event-card">
               {editingEventId === event._id ? (
                 <div className="edit-form">
                   <input value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title: e.target.value })} />
@@ -144,24 +161,30 @@ const AdminDashboard = () => {
                   <input type="number" value={editForm.maxParticipants} onChange={(e) => setEditForm({ ...editForm, maxParticipants: e.target.value })} />
                   <input type="date" value={editForm.startDate} onChange={(e) => setEditForm({ ...editForm, startDate: e.target.value })} />
                   <input type="date" value={editForm.endDate} onChange={(e) => setEditForm({ ...editForm, endDate: e.target.value })} />
-                  <div className="edit-actions">
-                    <button className="btn-success" onClick={() => handleUpdateEvent(event._id)}>Save</button>
-                    <button className="btn-secondary" onClick={() => setEditingEventId(null)}>Cancel</button>
-                  </div>
+                  <button onClick={() => handleUpdateEvent(event._id)}>💾 Save</button>
+                  <button onClick={() => setEditingEventId(null)}>❌ Cancel</button>
                 </div>
               ) : (
-                <div className="event-card">
-                  <div>
-                    <h4>{event.title}</h4>
-                    <p>{event.eventType} | {event.eventStatus} | {event.tags.join(', ')}</p>
-                    <p>{new Date(event.startDate).toLocaleDateString()} → {new Date(event.endDate).toLocaleDateString()}</p>
-                  </div>
+                <>
+                  <h4>{event.title}</h4>
+                  <p>{event.eventType} | {event.eventStatus} | {event.tags.join(', ')}</p>
+                  <p>{new Date(event.startDate).toLocaleDateString()} → {new Date(event.endDate).toLocaleDateString()}</p>
                   <div className="event-actions">
-                    <button className="btn-edit" onClick={() => handleEdit(event)}>Edit</button>
-                    <button className="btn-danger" onClick={() => handleDeleteEvent(event._id)}>Delete</button>
+                    <button onClick={() => handleEdit(event)}>✏️ Edit</button>
+                    <button onClick={() => handleDeleteEvent(event._id)}>🗑 Delete</button>
                   </div>
-                </div>
+                </>
               )}
+            </div>
+          ))}
+        </div>
+
+        <h3 className="section-title">🧑‍💻 Users</h3>
+        <ul className="user-list">
+          {users.map(user => (
+            <li key={user._id}>
+              <span>{user.name} ({user.email})</span>
+              <button onClick={() => handleDeleteUser(user._id)}>❌ Remove</button>
             </li>
           ))}
         </ul>

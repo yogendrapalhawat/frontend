@@ -1,7 +1,8 @@
-// src/pages/Events.js
+// === src/pages/Events.js ===
 import React, { useEffect, useState } from 'react';
 import api from '../api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import '../styles/events.css'; // ⬅️ Make sure to create this file
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -22,7 +23,7 @@ const Events = () => {
   const handleJoin = async (eventId) => {
     setJoining(eventId);
     try {
-      await api.post(`/events/join/${eventId}`);
+      await api.post(`/events/${eventId}/register`);
       fetchEvents();
     } catch (err) {
       console.error('Join error:', err);
@@ -37,23 +38,43 @@ const Events = () => {
 
   return (
     <div className="events-page">
-      <h2 className="page-title">Discover Events</h2>
+      <h2 className="events-heading">🎯 Explore Campus Events</h2>
+
       {loading ? (
         <LoadingSpinner />
+      ) : events.length === 0 ? (
+        <p className="no-events">No events found.</p>
       ) : (
         <div className="events-grid">
-          {events.map(event => (
+          {events.map((event) => (
             <div key={event._id} className="event-card">
-              <h3>{event.name}</h3>
-              <p>{event.description}</p>
-              <p><strong>Tag:</strong> {event.tag}</p>
-              <p><strong>Date:</strong> {new Date(event.startDate).toDateString()}</p>
+              <div className="card-header">
+                <h3>{event.title}</h3>
+                <span className={`status ${event.eventStatus?.toLowerCase()}`}>
+                  {event.eventStatus}
+                </span>
+              </div>
+
+              <p className="description">{event.description}</p>
+
+              <div className="tags">
+                {event.tags?.map((tag, i) => (
+                  <span key={i} className="tag">{tag}</span>
+                ))}
+              </div>
+
+              <p className="date">
+                📅 {new Date(event.startDate).toLocaleDateString()} → {new Date(event.endDate).toLocaleDateString()}
+              </p>
+
+              <p className="location">📍 {event.location || "Virtual"}</p>
+
               <button
                 onClick={() => handleJoin(event._id)}
                 disabled={joining === event._id}
                 className="join-btn"
               >
-                {joining === event._id ? 'Joining...' : 'Join'}
+                {joining === event._id ? '⏳ Joining...' : '🚀 Join Now'}
               </button>
             </div>
           ))}

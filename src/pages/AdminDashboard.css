@@ -1,0 +1,217 @@
+/* AdminDashboard.css */
+
+.admin-dashboard {
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(to bottom right, #f0f4ff, #e0e7ff);
+    font-family: 'Segoe UI', sans-serif;
+    color: #1e293b;
+  }
+  
+  .admin-heading {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  /* 🔍 Filter Section */
+  .filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+  
+  .filter-section select,
+  .filter-section input[type="date"] {
+    padding: 10px 12px;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    background: white;
+    font-size: 1rem;
+  }
+  
+  .btn-clear {
+    background: #f87171;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  
+  .btn-clear:hover {
+    background: #dc2626;
+  }
+  
+  /* 📦 Section Box */
+  .section-box {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* 👥 Users */
+  .user-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .user-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #e5e7eb;
+    padding: 10px 0;
+    font-size: 1rem;
+  }
+  
+  .btn-danger {
+    background-color: #ef4444;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  
+  .btn-danger:hover {
+    background-color: #b91c1c;
+  }
+  
+  /* 📅 Events */
+  .event-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .event-card {
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .event-card h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 5px;
+  }
+  
+  .event-meta {
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+  
+  .event-date {
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+  
+  .event-actions button {
+    margin-left: 10px;
+  }
+  
+  /* ✏️ Edit Mode */
+  .edit-form {
+    background: #fff7ed;
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 0 1px #fed7aa;
+  }
+  
+  .edit-form input,
+  .edit-form select {
+    flex: 1 1 180px;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+  }
+  
+  .edit-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .btn-save {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .btn-save:hover {
+    background-color: #15803d;
+  }
+  
+  .btn-cancel {
+    background-color: #facc15;
+    color: #1f2937;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #eab308;
+  }
+  
+  .btn-edit {
+    background-color: #3b82f6;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  
+  .btn-edit:hover {
+    background-color: #2563eb;
+  }
+  
+  /* 📱 Responsive */
+  @media screen and (max-width: 768px) {
+    .event-card,
+    .edit-form {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .event-actions {
+      margin-top: 10px;
+    }
+  
+    .filter-section {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  
