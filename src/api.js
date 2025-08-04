@@ -2,19 +2,20 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://one-portal-backend.onrender.com/api',
-  withCredentials: true // Only if you're using cookies
+  baseURL: 'https://my-app-f2oh.onrender.com/api',
+  withCredentials: true, // ✅ Required for CORS with credentials (cookies/JWT)
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
-
-export const getAllEvents = async () => {
+// ✅ Automatically attach token to all requests
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  const res = await api.get('/events', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data;
-};
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default api;

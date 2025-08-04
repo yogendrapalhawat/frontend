@@ -1,10 +1,10 @@
-// === src/pages/AdminDashboard.js ===
+// src/pages/AdminDashboard.js
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../api';
 import Navbar from '../components/Navbar';
-import './AdminDashboard.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import AdminPanelTester from '../components/AdminPanelTester';
+import '../styles/global.css';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -153,7 +153,7 @@ const AdminDashboard = () => {
         <h3 className="section-title">📋 Manage Events</h3>
         <div className="event-list">
           {filteredEvents.map(event => (
-            <div key={event._id} className="event-card">
+            <div key={event._id} className="event-card admin-card">
               {editingEventId === event._id ? (
                 <div className="edit-form">
                   <input value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title: e.target.value })} />

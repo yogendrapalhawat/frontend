@@ -1,0 +1,152 @@
+.my-events {
+    padding: 2rem;
+    background: linear-gradient(to bottom right, #fdf2f8, #eef2ff);
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .header .icon {
+    background: linear-gradient(to right, #9333ea, #ec4899);
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+    background: linear-gradient(to right, #9333ea, #ec4899, #3b82f6);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-top: 0.5rem;
+  }
+  
+  .header p {
+    font-size: 1rem;
+    color: #444;
+  }
+  
+  .loading {
+    text-align: center;
+    margin-top: 4rem;
+    font-size: 2rem;
+    color: #9333ea;
+  }
+  
+  .spin {
+    animation: spin 1s infinite linear;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .event-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  
+  .event-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .bar {
+    height: 6px;
+  }
+  
+  .bar.blue {
+    background: linear-gradient(to right, #3b82f6, #9333ea);
+  }
+  .bar.green {
+    background: linear-gradient(to right, #22c55e, #0d9488);
+  }
+  .bar.red {
+    background: linear-gradient(to right, #ef4444, #ec4899);
+  }
+  .bar.gray {
+    background: gray;
+  }
+  
+  .content {
+    padding: 1.2rem;
+  }
+  
+  .content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    color: #222;
+  }
+  
+  .content p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 1rem;
+  }
+  
+  .details {
+    font-size: 0.9rem;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .details span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .content button {
+    background: linear-gradient(to right, #ef4444, #ec4899);
+    color: white;
+    border: none;
+    padding: 0.6rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: 0.3s;
+  }
+  
+  .content button:hover {
+    background: linear-gradient(to right, #dc2626, #db2777);
+  }
+  
+  .content button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .header h1 {
+      font-size: 1.6rem;
+    }
+  
+    .event-list {
+      grid-template-columns: 1fr;
+    }
+  }
+  

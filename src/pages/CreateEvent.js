@@ -1,13 +1,13 @@
 // src/pages/CreateEvent.js
 import React, { useState } from 'react';
 import api from '../api';
-import '../styles/createEvent.css';
+import '../styles/global.css';
 
 const CreateEvent = () => {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    tag: 'Hackathon',
+    tags: ['Hackathon'],
     eventType: 'In-Person',
     location: '',
     startDate: '',
@@ -15,31 +15,40 @@ const CreateEvent = () => {
     maxParticipants: 100,
     college: '',
     registrationLink: '',
-    eventStatus: 'Upcoming'
+    eventStatus: 'Upcoming',
+    organizer: '' // ✅ Required field
   });
 
   const token = localStorage.getItem('token');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Handle single-select tag properly
+    if (name === 'tag') {
+      setForm({ ...form, tags: [value] });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleCreateEvent = async () => {
     try {
-      await api.post('/events', {
-        ...form,
-        tags: [form.tag]
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await api.post(
+        '/events',
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
 
       alert('✅ Event created successfully!');
       setForm({
         title: '',
         description: '',
-        tag: 'Hackathon',
+        tags: ['Hackathon'],
         eventType: 'In-Person',
         location: '',
         startDate: '',
@@ -47,10 +56,11 @@ const CreateEvent = () => {
         maxParticipants: 100,
         college: '',
         registrationLink: '',
-        eventStatus: 'Upcoming'
+        eventStatus: 'Upcoming',
+        organizer: ''
       });
     } catch (err) {
-      console.error('❌ Error creating event:', err);
+      console.error('❌ Error creating event:', err.response?.data || err.message);
       alert('❌ Failed to create event');
     }
   };
@@ -67,7 +77,7 @@ const CreateEvent = () => {
         <div className="form-grid">
           <div>
             <label>Tag</label>
-            <select name="tag" value={form.tag} onChange={handleChange}>
+            <select name="tag" value={form.tags[0]} onChange={handleChange}>
               <option>Hackathon</option>
               <option>AI</option>
               <option>Workshop</option>
@@ -92,6 +102,10 @@ const CreateEvent = () => {
         <input name="endDate" type="date" value={form.endDate} onChange={handleChange} />
         <input name="maxParticipants" type="number" value={form.maxParticipants} onChange={handleChange} placeholder="Max Participants" />
         <input name="college" value={form.college} onChange={handleChange} placeholder="College ID (MongoDB _id)" />
+
+        {/* ✅ Organizer field added */}
+        <input name="organizer" value={form.organizer} onChange={handleChange} placeholder="Organizer Name" />
+
         <input name="registrationLink" value={form.registrationLink} onChange={handleChange} placeholder="Registration Link (optional)" />
 
         <label>Status</label>

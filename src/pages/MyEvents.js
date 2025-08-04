@@ -1,64 +1,96 @@
-// src/pages/MyEvents.js
 import React, { useEffect, useState } from 'react';
-import api from '../api';
+import { Calendar, Clock, Users, LogOut, Sparkles, Heart } from 'lucide-react';
+import './MyEvents.css';
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [leavingEvent, setLeavingEvent] = useState(null);
+
+  const fetchEvents = async () => {
+    await new Promise((r) => setTimeout(r, 1000));
+    setEvents([
+      {
+        _id: '1',
+        title: 'Tech Conference 2025',
+        description: 'Join us for the biggest tech conference of the year with amazing speakers and networking opportunities',
+        startDate: '2025-08-15T09:00:00Z',
+        eventStatus: 'upcoming',
+        attendees: 250
+      },
+      {
+        _id: '2',
+        title: 'Music Festival Summer',
+        description: 'Three days of non-stop music with top artists from around the world',
+        startDate: '2025-07-20T18:00:00Z',
+        eventStatus: 'confirmed',
+        attendees: 5000
+      },
+      {
+        _id: '3',
+        title: 'Workshop: Digital Marketing',
+        description: 'Learn the latest digital marketing strategies from industry experts',
+        startDate: '2025-08-01T14:00:00Z',
+        eventStatus: 'upcoming',
+        attendees: 45
+      }
+    ]);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchMyEvents = async () => {
-      try {
-        const res = await api.get('/events/my', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setEvents(res.data);
-      } catch (err) {
-        console.error('❌ Failed to fetch joined events:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMyEvents();
+    fetchEvents();
   }, []);
 
+  const handleLeave = (id) => {
+    setLeavingEvent(id);
+    setTimeout(() => {
+      setEvents(events.filter(e => e._id !== id));
+      setLeavingEvent(null);
+    }, 1000);
+  };
+
+  const getStatusColor = (status) => {
+    if (status === 'upcoming') return 'blue';
+    if (status === 'confirmed') return 'green';
+    if (status === 'cancelled') return 'red';
+    return 'gray';
+  };
+
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
   return (
-    <div className="my-events-page" style={{ padding: '20px' }}>
-      <h2 style={{ fontSize: '28px', color: '#6b21a8', marginBottom: '20px' }}>🎉 My Joined Events</h2>
+    <div className="my-events">
+      <div className="header">
+        <div className="icon"><Heart size={28} color="white" /></div>
+        <h1>🎟️ My Joined Events</h1>
+        <p>Discover and manage all the amazing events you've joined</p>
+      </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <div className="loading"><Sparkles className="spin" /></div>
       ) : events.length === 0 ? (
-        <p style={{ fontSize: '18px', color: '#888' }}>You haven't joined any events yet.</p>
+        <p className="no-events">😔 You haven't joined any events yet.</p>
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '20px',
-          }}
-        >
-          {events.map((event) => (
-            <div
-              key={event._id}
-              style={{
-                backgroundColor: '#fff',
-                borderRadius: '10px',
-                padding: '20px',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-                transition: 'transform 0.3s',
-              }}
-              className="event-card"
-              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-            >
-              <h3 style={{ fontSize: '20px', color: '#333' }}>{event.title}</h3>
-              <p><strong>Date:</strong> {new Date(event.startDate).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> {event.eventStatus}</p>
-              <p><strong>Tag:</strong> {event.tags.join(', ')}</p>
+        <div className="event-list">
+          {events.map(event => (
+            <div className="event-card" key={event._id}>
+              <div className={`bar ${getStatusColor(event.eventStatus)}`}></div>
+              <div className="content">
+                <h2>{event.title}</h2>
+                <p>{event.description.slice(0, 100)}...</p>
+                <div className="details">
+                  <span><Calendar size={14} /> {formatDate(event.startDate)}</span>
+                  <span><Clock size={14} /> {event.eventStatus}</span>
+                  <span><Users size={14} /> {event.attendees} attendees</span>
+                </div>
+                <button onClick={() => handleLeave(event._id)} disabled={leavingEvent === event._id}>
+                  {leavingEvent === event._id ? 'Leaving...' : <><LogOut size={14} /> Leave Event</>}
+                </button>
+              </div>
             </div>
           ))}
         </div>

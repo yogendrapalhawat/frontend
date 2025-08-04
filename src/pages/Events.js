@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
 import LoadingSpinner from '../components/LoadingSpinner';
-import '../styles/events.css'; // ⬅️ Make sure to create this file
+import '../styles/global.css'; // ✅ Only global CSS
 
 const Events = () => {
   const [events, setEvents] = useState([]);
